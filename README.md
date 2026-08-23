@@ -18,6 +18,37 @@ Features AI symptom summaries, robust concurrency control for double-booking pre
 ### Admin Portal
 ![Admin Portal](./screenshots/Admin%20portal.jpeg)
 
+## 📁 File Structure
+
+```text
+HealthCare-Appointment/
+├── backend/
+│   ├── src/
+│   │   ├── config/          # Database connection
+│   │   ├── controllers/     # Route logic
+│   │   ├── middlewares/     # Auth and error handling
+│   │   ├── models/          # Mongoose schemas
+│   │   ├── routes/          # Express API routes
+│   │   ├── scripts/         # DB seed scripts
+│   │   ├── services/        # AI, Calendar, Cron, Email services
+│   │   └── index.ts         # Server entry point
+│   ├── package.json
+│   └── tsconfig.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # Reusable UI components (Navbar, etc.)
+│   │   ├── pages/           # Admin, Doctor, Patient Dashboards & Login
+│   │   ├── App.tsx          # Main React router
+│   │   └── main.tsx         # React entry point
+│   ├── public/              # Static assets & favicons
+│   ├── package.json
+│   └── vite.config.ts
+├── screenshots/             # Demo images for README
+├── System_Design.md         # Architecture documentation
+├── LICENSE                  # MIT License
+└── README.md                # Project documentation
+```
+
 ## ✨ Core Features
 
 - **Role-Based Dashboards:** Distinct interactive portals for Patients, Doctors, and Admins.
