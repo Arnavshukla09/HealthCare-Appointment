@@ -27,6 +27,16 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'API is running' });
 });
 
+import { User } from './models/User';
+app.get('/api/doctors', async (req, res) => {
+  try {
+    const doctors = await User.find({ role: 'doctor' }).select('-passwordHash');
+    res.json(doctors);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Serve frontend in production
 const frontendPath = path.join(process.cwd(), '../frontend/dist');
 app.use(express.static(frontendPath));
