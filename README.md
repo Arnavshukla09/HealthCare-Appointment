@@ -1,6 +1,32 @@
 # 🏥 MediBridge - Healthcare Appointment & Follow-up Manager
 
-A comprehensive healthcare appointment platform with separate portals for patients, doctors, and admin. Features AI symptom summaries, robust concurrency control for double-booking prevention, and automated leave conflict management.
+A comprehensive full-stack healthcare appointment platform with separate portals for patients, doctors, and system administrators. 
+Features AI symptom summaries, robust concurrency control for double-booking prevention, automated leave conflict management, and beautiful interactive dashboards.
+
+## 📸 Screenshots
+
+### Login Portal
+![Login Page](./screenshots/login%20page.jpeg)
+
+### Patient Portal
+![Patient Portal](./screenshots/patient%20portal.jpeg)
+![Dashboard](./screenshots/dashboard.jpeg)
+
+### Doctor Portal
+![Doctor Portal](./screenshots/Doctor%20Portal.jpeg)
+
+### Admin Portal
+![Admin Portal](./screenshots/Admin%20portal.jpeg)
+
+## ✨ Core Features
+
+- **Role-Based Dashboards:** Distinct interactive portals for Patients, Doctors, and Admins.
+- **Atomic Slot Holding:** Concurrency control prevents double-booking using a 5-minute atomic slot hold system during booking.
+- **Doctor Leave Management:** Admins can instantly put doctors on leave. Conflicting appointments are automatically cancelled and users are notified.
+- **AI Integration (Gemini):**
+  - *Pre-Visit Summary:* AI analyzes patient symptoms during booking to determine urgency.
+  - *Post-Visit Summary:* Doctors submit clinical notes which are converted into patient-friendly summaries and prescriptions.
+- **Background Jobs:** Node-cron handles retry-able background jobs like email notifications and reminders.
 
 ## 🚀 Setup Guide
 
@@ -15,65 +41,62 @@ git clone https://github.com/Arnavshukla09/HealthCare-Appointment.git
 cd HealthCare-Appointment
 ```
 
-### 2. Backend Setup
+### 2. Install Dependencies
+This project uses a monorepo setup. You can install all dependencies from the root:
 ```bash
-cd backend
-npm install
-```
-Create a `.env` file in the `backend` directory based on the `.env.example`:
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/healthcare_manager
-JWT_SECRET=supersecretjwtkey
-GEMINI_API_KEY=your_gemini_api_key
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
-GOOGLE_CLIENT_ID=your_client_id
-GOOGLE_CLIENT_SECRET=your_client_secret
+cd frontend && npm install
+cd ../backend && npm install
 ```
 
-Start the backend server:
+### 3. Environment Variables
+Create a `.env` file in the `backend` directory based on the provided `.env.example`:
+```env
+PORT=5000
+MONGO_URI=mongodb+srv://<user>:<password>@cluster...
+JWT_SECRET=supersecretjwtkey
+GEMINI_API_KEY=your_gemini_api_key
+```
+*(Ensure you never commit your actual `.env` file to version control. The repository now properly ignores it).*
+
+### 4. Seed the Database
+To populate the database with demo users (Admin, Doctor, Patient), run the seed script:
 ```bash
+cd backend
+npm run build
+node dist/scripts/seed.js
+```
+
+### 5. Run the Application
+You can run the backend and frontend separately for development:
+
+**Backend:**
+```bash
+cd backend
 npm run dev
 ```
 
-### 3. Frontend Setup
+**Frontend:**
 ```bash
-cd ../frontend
-npm install
+cd frontend
 npm run dev
 ```
 Open `http://localhost:5173` in your browser.
-
-## 🤖 LLM Prompts Used
-
-**Pre-visit Summary:**
-> "Analyse these symptoms and return: urgency level (Low / Medium / High), chief complaint, and three suggested questions for the doctor. Symptoms: {symptoms}"
-
-**Post-visit Summary:**
-> "Convert these clinical notes into a patient-friendly summary with medication schedule and follow-up steps: {notes}"
 
 ## 🗄️ Database Schema Summary
 
 - **Users:** Stores authentication data and roles (`admin`, `doctor`, `patient`).
 - **DoctorProfiles:** Links to `User`. Stores `specialization`, `workingHours`, `slotDuration`, and `leaveDays`.
-- **Appointments:** Links to `patient` and `doctor`. Tracks `status` (`HOLD`, `BOOKED`, `COMPLETED`, `CANCELLED`), `holdExpiresAt` (with TTL index), and stores AI summaries.
+- **Appointments:** Links to `patient` and `doctor`. Tracks `status` (`booked`, `completed`, `cancelled`), `holdExpiresAt` (with TTL index), and stores AI summaries.
 - **Notifications:** Job queue for background email retries.
 
 ## 📡 API Documentation (Overview)
 
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Authenticate and get JWT
+- `GET /api/appointments` - Fetch appointments for the logged-in user
 - `POST /api/appointments/hold` - Create a 5-minute atomic hold on a slot
 - `POST /api/appointments/book` - Confirm booking and submit symptoms
-- `GET /api/appointments` - Fetch appointments for the logged-in user
-- `POST /api/admin/doctor/leave` - Admin sets a doctor on leave, triggering auto-cancellation
 - `POST /api/doctor/post-visit` - Doctor submits clinical notes for AI summary generation
-
-## 📅 Google Calendar Setup
-1. Go to Google Cloud Console.
-2. Create a project and enable "Google Calendar API".
-3. Configure OAuth Consent Screen.
-4. Create OAuth Client ID credentials and add them to the `.env` file.
+- `GET /api/admin/users` - Admin fetch all users
+- `DELETE /api/admin/users/:id` - Admin delete a user
+- `POST /api/admin/doctor/leave` - Admin sets a doctor on leave, triggering auto-cancellation
