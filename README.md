@@ -100,3 +100,9 @@ Open `http://localhost:5173` in your browser.
 - `GET /api/admin/users` - Admin fetch all users
 - `DELETE /api/admin/users/:id` - Admin delete a user
 - `POST /api/admin/doctor/leave` - Admin sets a doctor on leave, triggering auto-cancellation
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2026 Arnav Shukla
