@@ -30,7 +30,7 @@ app.get('/api/health', (req, res) => {
 import { User } from './models/User';
 app.get('/api/doctors', async (req, res) => {
   try {
-    const doctors = await User.find({ role: 'doctor' }).select('-passwordHash');
+    const doctors = await User.find({ role: 'doctor' as any }).select('-passwordHash');
     res.json(doctors);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

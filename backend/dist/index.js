@@ -26,6 +26,16 @@ app.use('/api/doctor', doctor_routes_1.default);
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'ok', message: 'API is running' });
 });
+const User_1 = require("./models/User");
+app.get('/api/doctors', async (req, res) => {
+    try {
+        const doctors = await User_1.User.find({ role: 'doctor' }).select('-passwordHash');
+        res.json(doctors);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 // Serve frontend in production
 const frontendPath = path_1.default.join(process.cwd(), '../frontend/dist');
 app.use(express_1.default.static(frontendPath));
