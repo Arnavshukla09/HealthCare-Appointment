@@ -62,3 +62,40 @@ export const addDoctorLeave = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getUsers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const users = await User.find().select('-passwordHash');
+    res.json(users);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    await DoctorProfile.findOneAndDelete({ user: req.params.id });
+    res.json({ message: 'User deleted' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAppointments = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const appointments = await Appointment.find().populate('patient doctor', 'name email');
+    res.json(appointments);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateAppointment = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const apt = await Appointment.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(apt);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};

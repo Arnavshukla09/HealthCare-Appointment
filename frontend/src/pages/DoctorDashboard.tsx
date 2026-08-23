@@ -90,12 +90,12 @@ const DoctorDashboard = () => {
                       <div className="text-sm font-medium text-gray-900">{apt.patient?.name || 'Unknown'}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${apt.status === 'BOOKED' ? 'bg-blue-100 text-blue-800' : apt.status === 'CANCELLED' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${apt.status === 'booked' ? 'bg-blue-100 text-blue-800' : apt.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
                         {apt.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      {apt.status === 'BOOKED' && (
+                      {apt.status === 'booked' && (
                         <button 
                           onClick={() => openNotesModal(apt)}
                           className="text-indigo-600 hover:text-indigo-900 font-semibold border border-indigo-600 px-3 py-1 rounded hover:bg-indigo-50"
@@ -103,7 +103,7 @@ const DoctorDashboard = () => {
                           Add Post-Visit Notes
                         </button>
                       )}
-                      {apt.status === 'COMPLETED' && <span className="text-gray-400">Completed</span>}
+                      {apt.status === 'completed' && <span className="text-gray-400">Completed</span>}
                     </td>
                   </tr>
                 ))}
